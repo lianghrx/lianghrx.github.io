@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta name="generator" content="Hexo 3.8.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Webpack3.0">
+
+
+
+
+  <meta name="keywords" content="webpack,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="前端技术文档">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2017/11/14/webpack-v3/">
+
+
+<meta name="description" content="主要特性 依赖解析, 打包合并 支持异步模块, 按需加载 预编译代码, 通过loaders处理es6, jsx, less, sass等格式的模块 多任务处理, 通过plugins提供代码混淆、压缩、样式提取等功能 支持 ES6 &amp;amp; commonJS 模块 支持 sourcemap  主要流程webpack构建时, 从入口文件开始, 循环的解析依赖, 并将项目所需要的依赖, 打包成一个或多">
+<meta name="keywords" content="webpack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack3.0">
+<meta property="og:url" content="http://yoursite.com/2017/11/14/webpack-v3/index.html">
+<meta property="og:site_name" content="前端技术文档">
+<meta property="og:description" content="主要特性 依赖解析, 打包合并 支持异步模块, 按需加载 预编译代码, 通过loaders处理es6, jsx, less, sass等格式的模块 多任务处理, 通过plugins提供代码混淆、压缩、样式提取等功能 支持 ES6 &amp;amp; commonJS 模块 支持 sourcemap  主要流程webpack构建时, 从入口文件开始, 循环的解析依赖, 并将项目所需要的依赖, 打包成一个或多">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-10-31T11:16:00.943Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Webpack3.0">
+<meta name="twitter:description" content="主要特性 依赖解析, 打包合并 支持异步模块, 按需加载 预编译代码, 通过loaders处理es6, jsx, less, sass等格式的模块 多任务处理, 通过plugins提供代码混淆、压缩、样式提取等功能 支持 ES6 &amp;amp; commonJS 模块 支持 sourcemap  主要流程webpack构建时, 从入口文件开始, 循环的解析依赖, 并将项目所需要的依赖, 打包成一个或多">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Webpack3.0 - 前端技术文档 </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">前端技术文档</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Webpack3.0
+        
+      </h1>
+
+      <time class="post-time">
+          Nov 14 2017
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="主要特性"><a href="#主要特性" class="headerlink" title="主要特性"></a>主要特性</h2><ul>
+<li>依赖解析, 打包合并</li>
+<li>支持异步模块, 按需加载</li>
+<li>预编译代码, 通过loaders处理es6, jsx, less, sass等格式的模块</li>
+<li>多任务处理, 通过plugins提供代码混淆、压缩、样式提取等功能</li>
+<li>支持 ES6 &amp; commonJS 模块</li>
+<li>支持 sourcemap</li>
+</ul>
+<h2 id="主要流程"><a href="#主要流程" class="headerlink" title="主要流程"></a>主要流程</h2><p>webpack构建时, 从入口文件开始, 循环的解析依赖, 并将项目所需要的依赖, 打包成一个或多个文件输出</p>
+<p>生成compiler -&gt; 处理入口模块 -&gt; 解析模块依赖 -&gt; 调用loader加载模块 -&gt; 打包文件, 拆分异步chunks -&gt; 调用插件处理文件内容 -&gt; 输出模块文件</p>
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><ul>
+<li>入口文件 (Entry) 构建项目和解析依赖关系的入口</li>
+<li>输出文件 (Output) 打包后文件的输出格式和位置</li>
+<li>加载器 (Loaders) 针对不同格式模块的预处理器, 可以替换或转义代码内容</li>
+<li>插件 (Plugins) 代码打包输出前的最后处理, 如压缩和混淆等操作</li>
+</ul>
+<h3 id="Entry"><a href="#Entry" class="headerlink" title="Entry"></a>Entry</h3><p><strong>单一入口, entry: string | Array <string></string></strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const config = &#123;</span><br><span class="line">  entry: &apos;./path/to/my/entry/file.js&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>多个入口,  entry: {[entryChunkName: string]: string | Array<string>}</string></strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const config = &#123;</span><br><span class="line">  entry: &#123;</span><br><span class="line">    vendor: &apos;./path/to/my/entry/file1.js&apos;,</span><br><span class="line">    index: [&apos;./path/to/my/entry/file2.js&apos;, &apos;./path/to/my/entry/app.js&apos;]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Output"><a href="#Output" class="headerlink" title="Output"></a>Output</h3><p>输出配置至少需要以下两个配置</p>
+<ul>
+<li>filename, 输出文件的名称(格式)</li>
+<li>path, 输出文件夹的绝对路径</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const config = &#123;</span><br><span class="line">  output: &#123;</span><br><span class="line">    filename: &apos;bundle.js&apos;,</span><br><span class="line">    path: &apos;/home/proj/public/assets&apos;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>额外的属性</p>
+<ul>
+<li>chunkFilename, 拆分bundle文件的名称(格式)</li>
+<li>publicPath, 静态资源的线上路径</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const config = &#123;</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: &apos;/home/proj/build&apos;,</span><br><span class="line">    publicPath: &apos;/cdn/&apos;</span><br><span class="line">    filename: &apos;[name].[chunkhash:8].js&apos;,</span><br><span class="line">    chunkFilename: &apos;chunk.[name].[chunkhash:8].js&apos;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>常用的名称格式有以下几种</strong></p>
+<table>
+<thead>
+<tr>
+<th>标记</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[hash]</td>
+<td>模块id的hash值</td>
+</tr>
+<tr>
+<td>[chunkhash]</td>
+<td>chunk内容的hash值</td>
+</tr>
+<tr>
+<td>[name]</td>
+<td>模块的名称</td>
+</tr>
+<tr>
+<td>[id]</td>
+<td>模块的id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Loader"><a href="#Loader" class="headerlink" title="Loader"></a>Loader</h3><p>必要的属性</p>
+<ul>
+<li>test, 正在表达式, 用于匹配文件名</li>
+<li>loader/use, 处理文件内容的加载器</li>
+</ul>
+<p>额外的属性</p>
+<ul>
+<li>include, 指定文件的目录范围</li>
+<li>exclude, 指定排除的目录</li>
+<li>options/query, 加载器的参数配置</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">module: &#123;</span><br><span class="line">  rules: [&#123;</span><br><span class="line">    test: /\.jsx?$/,</span><br><span class="line">    loader: &apos;babel-loader&apos;,</span><br><span class="line">    exclude: [</span><br><span class="line">      path.resolve(SRC_PATH, &apos;../node_modules&apos;)</span><br><span class="line">    ]</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    test: /\.css?$/,</span><br><span class="line">    use: [&apos;style-loader&apos;, &apos;css-loader&apos;, &apos;postcss-loader&apos;]</span><br><span class="line">  &#125;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Plugin"><a href="#Plugin" class="headerlink" title="Plugin"></a>Plugin</h3><p>提供定制化的webpack编译模式, 下面是一些常用插件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">plugins: [</span><br><span class="line">  // build optimization plugins</span><br><span class="line">  new webpack.optimize.CommonsChunkPlugin(&#123;</span><br><span class="line">    name: &apos;vendor&apos;,</span><br><span class="line">    filename: &apos;vendor-[hash].min.js&apos;,</span><br><span class="line">  &#125;),</span><br><span class="line">  new webpack.optimize.UglifyJsPlugin(&#123;</span><br><span class="line">    compress: &#123;</span><br><span class="line">      warnings: false,</span><br><span class="line">      drop_console: false,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;),</span><br><span class="line">  new ExtractTextPlugin(&#123;</span><br><span class="line">    filename: &apos;index.min.css&apos;</span><br><span class="line">  &#125;),</span><br><span class="line">  new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),</span><br><span class="line">  // compile time plugins</span><br><span class="line">  new webpack.DefinePlugin(&#123;</span><br><span class="line">    &apos;process.env.NODE_ENV&apos;: &apos;&quot;production&quot;&apos;,</span><br><span class="line">  &#125;),</span><br><span class="line">  // webpack-dev-server enhancement plugins</span><br><span class="line">  new webpack.HotModuleReplacementPlugin()</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
+<h2 id="升级-3-0"><a href="#升级-3-0" class="headerlink" title="升级 3.0"></a>升级 3.0</h2><p>此次从1.0升级到3.0, 带来了许多新的功能点</p>
+<ul>
+<li>支持ES6模块, 如import, export等语法(v2)</li>
+<li>针对ES6模块, 提供动态加载方法<code>import()</code>(v2), 并通过注释定义模块信息(v3)</li>
+<li>基于ES6模块的静态结构, 提供Tree shaking功能, 移除未被使用的模块输出(v2)</li>
+<li>作用域提升/合并, 通过启用插件<code>webpack.optimize.ModuleConcatenationPlugin</code>, 减少模块打包后产生的闭包数量, 优化代码执行速度和打包体积(v3)</li>
+<li>集成常用loader, 如less, sass, CoffeeScript, TypeScript等</li>
+</ul>
+<h2 id="迁移至新版本"><a href="#迁移至新版本" class="headerlink" title="迁移至新版本"></a>迁移至新版本</h2><p><a href="https://doc.webpack-china.org/guides/migrating/#resolve-root-resolve-fallback-resolve-modulesdirectories" target="_blank" rel="noopener">webpack官方文档</a></p>
+<ul>
+<li>resolve.modulesDirectories 改为 resolve.modules, 取消resolve.root</li>
+<li>module.loaders 改为 module.rules, 并取消加载器自动添加’-loader后缀’</li>
+<li>json-loader 不再需要手动添加, 已自动集成</li>
+<li>loader 默认相对于 context 进行解析, 解决了引用 context 上下文目录之外的模块时，loader 所导致的模块重复载入的问题</li>
+<li>UglifyJsPlugin 的默认配置 sourceMap &amp; warnings 改为 false</li>
+<li>loaders默认不再使用压缩模式, 可以通过插件<code>webpack.LoaderOptionsPlugin({minimize:true})</code>开启</li>
+<li>移除 webpack.optimize.DedupePlugin, 默认加载 webpack.optimize.OccurenceOrderPlugin</li>
+<li>ExtractTextWebpackPlugin有较大改动, 具体内容请参考文档</li>
+<li>require.ensure 以及 AMD require 将采用异步式调用, 而不是当 chunk 已经加载完成的时候同步调用它们的回调函数(callback)</li>
+<li>自定义属性配置loader无效, 只能通过options配置</li>
+<li>debug模式, 需要通过loader的options配置</li>
+<li>require.ensure &amp; import() 两种方式实现动态加载模块, 可以混合使用ES2015、AMD 和 CommonJS模块, 但是每个模块内只能由一种模块格式</li>
+<li>让webpack处理ES6模块, 以启用tree shaking, 需要通过.babelrc或者babel-loader设置<code>modules:false</code></li>
+<li>支持配置文件中返回Promise对象</li>
+<li>支持对loader更多方式的匹配</li>
+</ul>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/webpack/">webpack</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/05/15/nodejs-server-web/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Nodejs之web服务开发</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/09/19/redux-code-view/">
+        <span class="next-text nav-default">redux源码阅读</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2018
+    <span class="footer-author">FEGO.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta name="generator" content="Hexo 3.8.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Nodejs之web服务开发">
+
+
+
+
+  <meta name="keywords" content="nodejs,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="前端技术文档">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2018/05/15/nodejs-server-web/">
+
+
+<meta name="description" content="内容大纲 原生http connect koa  原生httphttp模块的组成node里面内置了http的模块，http模块中四个很重要的类会经常用到，分别是http.Server,http.ClientRequest,http.ServerResponse,http.IncomingMessage，下图反应了他们之间的关系。  简单的http服务器一个简单的http服务端实现是这样:12345">
+<meta name="keywords" content="nodejs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs之web服务开发">
+<meta property="og:url" content="http://yoursite.com/2018/05/15/nodejs-server-web/index.html">
+<meta property="og:site_name" content="前端技术文档">
+<meta property="og:description" content="内容大纲 原生http connect koa  原生httphttp模块的组成node里面内置了http的模块，http模块中四个很重要的类会经常用到，分别是http.Server,http.ClientRequest,http.ServerResponse,http.IncomingMessage，下图反应了他们之间的关系。  简单的http服务器一个简单的http服务端实现是这样:12345">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB038b0dbdf13606320ea6a08cde1d3bb5?method=download&shareKey=7888dd66e68cafbae317d29777063ecd">
+<meta property="og:updated_time" content="2018-10-31T11:10:07.411Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs之web服务开发">
+<meta name="twitter:description" content="内容大纲 原生http connect koa  原生httphttp模块的组成node里面内置了http的模块，http模块中四个很重要的类会经常用到，分别是http.Server,http.ClientRequest,http.ServerResponse,http.IncomingMessage，下图反应了他们之间的关系。  简单的http服务器一个简单的http服务端实现是这样:12345">
+<meta name="twitter:image" content="https://note.youdao.com/yws/api/personal/file/WEB038b0dbdf13606320ea6a08cde1d3bb5?method=download&shareKey=7888dd66e68cafbae317d29777063ecd">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Nodejs之web服务开发 - 前端技术文档 </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">前端技术文档</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Nodejs之web服务开发
+        
+      </h1>
+
+      <time class="post-time">
+          May 15 2018
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="内容大纲"><a href="#内容大纲" class="headerlink" title="内容大纲"></a>内容大纲</h3><ul>
+<li>原生http</li>
+<li>connect</li>
+<li>koa</li>
+</ul>
+<h3 id="原生http"><a href="#原生http" class="headerlink" title="原生http"></a>原生http</h3><h4 id="http模块的组成"><a href="#http模块的组成" class="headerlink" title="http模块的组成"></a>http模块的组成</h4><p>node里面内置了http的模块，http模块中四个很重要的类会经常用到，分别是<code>http.Server</code>,<code>http.ClientRequest</code>,<code>http.ServerResponse</code>,<code>http.IncomingMessage</code>，下图反应了他们之间的关系。</p>
+<p><img src="https://note.youdao.com/yws/api/personal/file/WEB038b0dbdf13606320ea6a08cde1d3bb5?method=download&amp;shareKey=7888dd66e68cafbae317d29777063ecd" alt="image"></p>
+<h4 id="简单的http服务器"><a href="#简单的http服务器" class="headerlink" title="简单的http服务器"></a>简单的http服务器</h4><p>一个简单的http服务端实现是这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//demo1.js</span><br><span class="line">const http = require(&apos;http&apos;);</span><br><span class="line">let num = 0;</span><br><span class="line">http.createServer((request,response)=&gt;&#123;</span><br><span class="line">    console.log(&apos;new request ! &apos;,++num);</span><br><span class="line">    response.end(&apos;Hello World&apos;);</span><br><span class="line">&#125;).listen(8080);</span><br><span class="line">console.log(&apos;now listen on 8080&apos;);</span><br></pre></td></tr></table></figure></p>
+<p><code>createServer</code>方法会返回一个<code>http.Server</code>的实例，创建的时候可以传入一个<code>requestListener</code>，该函数会自动绑定到 <code>request</code>事件上，当客户端向服务器端发起请求的时候，就会触发<code>request</code>事件，<code>request</code>事件的回调函数有两个参数，第一个参数是<code>http.IncomingMessage</code>，第二个参数是<code>http.ServerResponse</code>，<code>http.IncomingMessage</code>代表<code>client</code>端的信息，比如httpVersion，headers，method等。<code>http.ServerResponse</code>包含服务端一些列数据处理方法，比如设置头信息，往sokcet中写入数据等。</p>
+<h4 id="文件的传输"><a href="#文件的传输" class="headerlink" title="文件的传输"></a>文件的传输</h4><p>node中提供了<code>Stream类</code>，结合<code>http.SeverResponse</code>类，可以很方便的将文件流接入到socket流里面。如果服务端不设置编码类型，默认为chunked，这是由node异步机制决定的，下面是传输图片的例子。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//server.js</span><br><span class="line">const http = require(&apos;http&apos;);</span><br><span class="line">let num = 0;</span><br><span class="line">http.createServer((req,res)=&gt;&#123;</span><br><span class="line">    console.log(&apos;new request ! &apos;,++num);</span><br><span class="line">    res.writeHead(200,&#123;&apos;Content-Type&apos;:&apos;image/jpeg&apos;&#125;);</span><br><span class="line">    require(&apos;fs&apos;).createReadStream(&apos;desert.jpeg&apos;).pipe(res);</span><br><span class="line">&#125;).listen(8080);</span><br><span class="line">console.log(&apos;now listen on 8080&apos;);</span><br></pre></td></tr></table></figure>
+<h4 id="主动发起请求"><a href="#主动发起请求" class="headerlink" title="主动发起请求"></a>主动发起请求</h4><p>Node中，可以通过<code>http.request</code>或者<code>http.get</code>主动发起请求，这两个函数均返回一个<code>http.ClientRequest</code>的实例。发起请求的时候，可以传入一个回调函数，该回调函数会绑定在<code>response</code>事件上，当请求相应被接收到的时候触发该事件，回调函数的参数为<code>http.IncomingMessage</code>的实例。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//client.js</span><br><span class="line">http.get(&apos;http://127.0.0.1:8080&apos;,(res)=&gt;&#123;</span><br><span class="line">	let num = 0;</span><br><span class="line">    res.on(&apos;data&apos;,(data)=&gt;&#123;</span><br><span class="line">		console.log(&apos;******chunk data******\r\n&apos;);</span><br><span class="line">		console.log(`chunk: $&#123;++num&#125;  len: $&#123;data.length&#125;\n`);</span><br><span class="line">    &#125;);</span><br><span class="line">    res.on(&apos;end&apos;,()=&gt;&#123;</span><br><span class="line">		console.log(&apos;******responese end******\r\n&apos;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="获取client数据"><a href="#获取client数据" class="headerlink" title="获取client数据"></a>获取client数据</h4><p>编写服务器的时候，针对客户端不同的请求路径，需要展示不同的页面，这个过程称为路由，请求路径通过<code>http.IncomingMessage</code>实例的url可以拿到，<code>http.IncomingMessage</code>实现了可读流的接口，通过流的<code>data</code>事件和<code>end</code>事件，能够获取来自client端提交过来的数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">const http = require(&apos;http&apos;);</span><br><span class="line">const qs=require(&apos;querystring&apos;);</span><br><span class="line"></span><br><span class="line">let num = 0;</span><br><span class="line">http.createServer((req,res)=&gt;&#123;</span><br><span class="line">    console.log(&apos;new request ! &apos;,++num);</span><br><span class="line">    res.writeHead(200,&#123;&apos;Content-Type&apos;:&apos;text/html; charset=utf-8&apos;&#125;);</span><br><span class="line">    if(req.url === &apos;/register&apos; &amp;&amp; req.method === &apos;POST&apos;) &#123;</span><br><span class="line">        let content = &apos;&apos;;</span><br><span class="line">        req.on(&apos;data&apos;,(chunk)=&gt;&#123;</span><br><span class="line">            content += chunk;</span><br><span class="line">        &#125;);</span><br><span class="line">        req.on(&apos;end&apos;,()=&gt;&#123;</span><br><span class="line">            let param = qs.parse(content);</span><br><span class="line">            param = JSON.stringify(param);</span><br><span class="line">            res.end(`&lt;p&gt;Content-Type: $&#123;req.headers[&apos;content-type&apos;]&#125;&lt;/p&gt;&lt;p&gt;Data: $&#123;param&#125;&lt;/p&gt;`,&apos;utf-8&apos;);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; else if(&apos;/&apos; === req.url)&#123;</span><br><span class="line">        res.end([</span><br><span class="line">                &apos;&lt;form method=&quot;POST&quot; action=&quot;/register&quot;&gt;&apos;,</span><br><span class="line">                &apos;&lt;h1&gt;表单&lt;/h1&gt;&apos;,</span><br><span class="line">                &apos;&lt;fieldset&gt;&apos;,</span><br><span class="line">                &apos;&lt;label&gt;个人信息&lt;/label&gt;&apos;,</span><br><span class="line">                &apos;&lt;p&gt;姓名: &lt;input type=&quot;text&quot; name=&quot;name&quot;/&gt; &lt;/p&gt;&apos;,</span><br><span class="line">                &apos;&lt;p&gt;&lt;button&gt;提交&lt;/button&gt;&lt;/p&gt;&apos;,</span><br><span class="line">                &apos;&lt;/form&gt;&apos;</span><br><span class="line">        ].join(&apos;&apos;));</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        res.writeHead(404)</span><br><span class="line">        res.end(&apos;Not Found&apos;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).listen(8080);</span><br><span class="line">console.log(&apos;now listen on 8080&apos;);</span><br></pre></td></tr></table></figure>
+<p>服务端在writeHead的时候需要指定charset，不然客户端会显示为乱码，res.write()和res.end()的时候默认编码是utf-8。</p>
+<h4 id="辅助工具"><a href="#辅助工具" class="headerlink" title="辅助工具"></a>辅助工具</h4><p>调试服务器的时候，可能会需要经常改动服务端代码，停掉服务器，然后重启服务器，这一个过程会非常麻烦，这时候可以使用第三方的工具<code>nodemon</code>，<code>nodemon</code>会监视文件的变化，然后自动重启服务器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i nodemon --save-dev</span><br></pre></td></tr></table></figure></p>
+<p>nodemon的配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//package.json</span><br><span class="line"></span><br><span class="line">  &quot;nodemonConfig&quot;: &#123;</span><br><span class="line">    &quot;ignore&quot;: [&quot;test/*&quot;, &quot;docs/*&quot;, &quot;*.jpeg&quot;],</span><br><span class="line">    &quot;delay&quot;: &quot;2500&quot;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="静态网站"><a href="#静态网站" class="headerlink" title="静态网站"></a>静态网站</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">const http = require(&apos;http&apos;);</span><br><span class="line">const fs = require(&apos;fs&apos;);</span><br><span class="line"></span><br><span class="line">function notfound(res) &#123;</span><br><span class="line">    res.writeHead(404);</span><br><span class="line">    res.end(&apos;Not Found&apos;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function show(path, type, res) &#123;</span><br><span class="line">    fs.stat(path, (err, stat) =&gt; &#123;</span><br><span class="line">        if (err || !stat.isFile()) &#123;</span><br><span class="line">            notfound(res);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            res.writeHead(200, &#123;</span><br><span class="line">                &apos;Content-Type&apos;: type</span><br><span class="line">            &#125;);</span><br><span class="line">            fs.createReadStream(path).pipe(res);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line">const STATIC_PATH = &apos;/public&apos;</span><br><span class="line">const server = http.createServer((req, res) =&gt; &#123;</span><br><span class="line">    console.log(&apos;url: &apos;, req.url);</span><br><span class="line">    if (req.url.startsWith(&apos;/image&apos;)) &#123;</span><br><span class="line">        let suffixIndex = req.url.lastIndexOf(&apos;.&apos;);</span><br><span class="line">        if (suffixIndex &gt; 0) &#123;</span><br><span class="line">            let suffix = req.url.substring(suffixIndex + 1)</span><br><span class="line">            show(__dirname + STATIC_PATH + req.url, &apos;image/&apos; + suffix, res);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            notfound(res);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else if (req.url === &apos;/&apos;) &#123;</span><br><span class="line">        show(__dirname + STATIC_PATH + &apos;/index.htm&apos;,&apos;text/html&apos;, res);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        notfound(res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">server.listen(8080);</span><br><span class="line">server.on(&apos;error&apos;,(err)=&gt;&#123;</span><br><span class="line">    console.log(err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>Error: listen EACCES 0.0.0.0:80</p>
+<p>原因监听 1024 以下端口 需要sudo权限，否则报   listen EACCES 错误</p>
+<h3 id="connect"><a href="#connect" class="headerlink" title="connect"></a>connect</h3><h4 id="http服务器"><a href="#http服务器" class="headerlink" title="http服务器"></a>http服务器</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">const http = require(&apos;http&apos;);</span><br><span class="line">const connect = require(&apos;connect&apos;);</span><br><span class="line">const app = connect();</span><br><span class="line">app.use((req,res,next)=&gt;&#123;</span><br><span class="line">    res.end(&apos;Hello from connect\r\n&apos;);</span><br><span class="line">&#125;);</span><br><span class="line">app.listen(8080);</span><br></pre></td></tr></table></figure>
+<h4 id="静态资源服务器"><a href="#静态资源服务器" class="headerlink" title="静态资源服务器"></a>静态资源服务器</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const http = require(&apos;http&apos;);</span><br><span class="line">const connect = require(&apos;connect&apos;);</span><br><span class="line">const app = connect();</span><br><span class="line">const serveStatic = require(&apos;serve-static&apos;);</span><br><span class="line">app.use(serveStatic(&apos;public&apos;,&#123;&apos;index&apos;:[&apos;index.html&apos;,&apos;index.htm&apos;]&#125;));</span><br><span class="line">app.listen(8080);</span><br></pre></td></tr></table></figure>
+<h4 id="connect中间件"><a href="#connect中间件" class="headerlink" title="connect中间件"></a>connect中间件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">const http = require(&apos;http&apos;);</span><br><span class="line">const connect = require(&apos;connect&apos;);</span><br><span class="line">const responseTime = require(&apos;response-time&apos;);</span><br><span class="line">const app = connect();</span><br><span class="line"></span><br><span class="line">app.use(responseTime());</span><br><span class="line">app.use((req,res,next)=&gt;&#123;</span><br><span class="line">    console.log(&apos;111&apos;);</span><br><span class="line">    next();</span><br><span class="line">    console.log(&apos;222&apos;);</span><br><span class="line">&#125;);</span><br><span class="line">app.use(&apos;/api&apos;,(req,res,next)=&gt;&#123;</span><br><span class="line">    console.log(&apos;333&apos;);</span><br><span class="line">    res.write(&apos;before next\n&apos;);</span><br><span class="line">    next();</span><br><span class="line">    res.end(&apos;hello api&apos;);</span><br><span class="line">    console.log(&apos;444&apos;);</span><br><span class="line">&#125;);</span><br><span class="line">app.use((req,res,next)=&gt;&#123;</span><br><span class="line">    console.log(&apos;555&apos;);</span><br><span class="line">    next();</span><br><span class="line">    console.log(&apos;666&apos;);</span><br><span class="line">&#125;);</span><br><span class="line">app.use((req,res,next)=&gt;&#123;</span><br><span class="line">    res.write(&apos;common info\n&apos;);</span><br><span class="line">    res.end(&apos;end&apos;);</span><br><span class="line">&#125;);</span><br><span class="line">app.listen(8080);</span><br><span class="line">console.log(&apos;server start at port: &apos;, 8080);</span><br></pre></td></tr></table></figure>
+<h4 id="connect中的错误处理"><a href="#connect中的错误处理" class="headerlink" title="connect中的错误处理"></a>connect中的错误处理</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">const http = require(&apos;http&apos;);</span><br><span class="line">const connect = require(&apos;connect&apos;);</span><br><span class="line">const app = connect();</span><br><span class="line"></span><br><span class="line">app.use((req,res,next)=&gt;&#123;</span><br><span class="line">    setTimeout(()=&gt;&#123;</span><br><span class="line">        console.log(&apos;async&apos;);</span><br><span class="line">        throw(new Error(&apos;Async Error Demo&apos;));</span><br><span class="line">    &#125;,1000);</span><br><span class="line">    throw(new Error(&apos;Error Demo&apos;));</span><br><span class="line">    next();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.use((req,res,next)=&gt;&#123;</span><br><span class="line">    console.log(&apos;middware&apos;);</span><br><span class="line">    next();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.use((err,req,res,next)=&gt;&#123;</span><br><span class="line">    console.log(&quot;err1:&quot;,err);</span><br><span class="line">    res.end(&apos;err1&apos;);</span><br><span class="line">    // next(err);</span><br><span class="line">&#125;);</span><br><span class="line">app.use((err,req,res,next)=&gt;&#123;</span><br><span class="line">    console.log(&quot;err2:&quot;,err);</span><br><span class="line">    res.statusCode = 500;</span><br><span class="line">    res.end(&apos;Internal Error&apos;);</span><br><span class="line">&#125;);</span><br><span class="line">app.listen(8080);</span><br><span class="line">console.log(&apos;server start at port: &apos;, 8080);</span><br></pre></td></tr></table></figure>
+<p>原则:</p>
+<ul>
+<li>通过特殊的中间件进行处理，参数为4个，第一个为错误信息</li>
+<li>出错后，寻找最近的一个错误中间件进行处理</li>
+<li>可以通过next(err)传递到下一个错误中间件</li>
+<li>对于异步抛出的错误，需要在异步中调用next(err)来抛出错误。</li>
+</ul>
+<h4 id="callback-hell"><a href="#callback-hell" class="headerlink" title="callback hell"></a>callback hell</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">app.use((req,res,next)=&gt;&#123;</span><br><span class="line">    console.log(&apos;111&apos;);</span><br><span class="line">    proxy.fetchUser((err, data)=&gt;&#123;</span><br><span class="line">        if(!err)&#123;</span><br><span class="line">            console.log(&apos;user fetched!&apos;);</span><br><span class="line">            res.write(JSON.stringify(data));</span><br><span class="line">            res.write(&apos;\n&apos;);</span><br><span class="line">            proxy.fetchInfo((err,data)=&gt;&#123;</span><br><span class="line">                if(!err)&#123;</span><br><span class="line">                    console.log(&apos;info fetched&apos;);</span><br><span class="line">                    res.write(JSON.stringify(data));</span><br><span class="line">                    res.write(&apos;\n&apos;);</span><br><span class="line">                &#125;</span><br><span class="line">                next();</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            //error </span><br><span class="line">            next();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    console.log(&apos;222&apos;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>express是对connect的封装，驱动方式一样，内置了很多组件，比如router，logger等，还有很多第三方组件方便开发者使用。express还支持使用模板渲染网页。express的使用可以参考<a href="https://github.com/expressjs/express。" target="_blank" rel="noopener">https://github.com/expressjs/express。</a></p>
+<h4 id="通过模板渲染页面"><a href="#通过模板渲染页面" class="headerlink" title="通过模板渲染页面"></a>通过模板渲染页面</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//index.ejs</span><br><span class="line"></span><br><span class="line">&lt;h1&gt;express demo&lt;/h1&gt;</span><br><span class="line">&lt;p&gt;输入你的名字&lt;/p&gt;</span><br><span class="line">&lt;form action=&quot;/register&quot; method=&quot;POST&quot;&gt;</span><br><span class="line">    &lt;input type=&quot;text&quot; name=name&gt;</span><br><span class="line">    &lt;button&gt;提交&lt;/button&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line"></span><br><span class="line">//normal.ejs</span><br><span class="line"></span><br><span class="line">&lt;h1&gt;欢迎&lt;/h1&gt;</span><br><span class="line">&lt;b&gt;&lt;%= name %&gt;&lt;/b&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="express服务器"><a href="#express服务器" class="headerlink" title="express服务器"></a>express服务器</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">const express = require(&apos;express&apos;);</span><br><span class="line">const app = express();</span><br><span class="line">const bodyParser = require(&apos;body-parser&apos;)</span><br><span class="line">app.set(&apos;view engine&apos;, &apos;ejs&apos;);</span><br><span class="line">app.set(&apos;views&apos;, __dirname + &apos;/views&apos;);</span><br><span class="line">app.set(&apos;view options&apos;, &#123;</span><br><span class="line">    layout: false</span><br><span class="line">&#125;)</span><br><span class="line">app.use(bodyParser.urlencoded(&#123;</span><br><span class="line">    extended: true</span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line">app.get(&apos;/&apos;, (req, res) =&gt; &#123;</span><br><span class="line">    res.render(&apos;index&apos;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.post(&apos;/register&apos;, (req, res, next) =&gt; &#123;</span><br><span class="line">    res.render(&apos;normal&apos;, &#123;</span><br><span class="line">        name: req.body.name</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.get(&apos;/api/check&apos;, (req, res) =&gt; &#123;</span><br><span class="line">    res.json(&#123;</span><br><span class="line">        retcode: 200,</span><br><span class="line">        retdesc: &apos;success&apos;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line">app.use((err, req, res, next) =&gt; &#123;</span><br><span class="line">    console.log(err);</span><br><span class="line">&#125;);</span><br><span class="line">app.listen(8080);</span><br></pre></td></tr></table></figure>
+<h3 id="koa"><a href="#koa" class="headerlink" title="koa"></a>koa</h3><p>koa是和connect类似的框架，koa使用async、await消除了深层的callback，可以用同步的方式去写异步的代码，koa的理念和express不同，koa只提供必要的组件，核心框架很简洁，没有内置其他的组件，我们在实现某个功能的时候，可以根据自己的需要去选择喜欢的第三方组件，koa支持的第三方组件可以上<a href="https://github.com/koajs/koa/wiki" target="_blank" rel="noopener">wiki</a>上查询。</p>
+<h4 id="koa的例子"><a href="#koa的例子" class="headerlink" title="koa的例子"></a>koa的例子</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">const koa = require(&apos;koa&apos;);</span><br><span class="line">const staticServer = require(&apos;koa-static&apos;);</span><br><span class="line">const logger = require(&apos;koa-logger&apos;);</span><br><span class="line">const koaRouter = require(&apos;koa-router&apos;);</span><br><span class="line">const bodyParser = require(&apos;koa-bodyparser&apos;);</span><br><span class="line"></span><br><span class="line">const app = new koa();</span><br><span class="line"></span><br><span class="line">app.use(async(ctx,next)=&gt;&#123;</span><br><span class="line">    console.log(&apos;koa---1&apos;);</span><br><span class="line">    await next();</span><br><span class="line">    console.log(&apos;koa---2&apos;);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.use(bodyParser());</span><br><span class="line"></span><br><span class="line">app.use(logger());</span><br><span class="line"></span><br><span class="line">const router = new koaRouter();</span><br><span class="line">const apiRoute = require(&apos;./routes/api&apos;);</span><br><span class="line">router.use(&apos;/api&apos;,apiRoute.routes());</span><br><span class="line">app.use(router.routes()).use(router.allowedMethods());</span><br><span class="line">//跳转</span><br><span class="line">router.get(&apos;/redirect&apos;,async(ctx,next)=&gt;&#123;</span><br><span class="line">    ctx.response.redirect(&apos;/&apos;);</span><br><span class="line">    ctx.body = &apos;Main Page&apos;;</span><br><span class="line">&#125;);</span><br><span class="line">app.use(staticServer(__dirname + &apos;/public&apos;));</span><br><span class="line"></span><br><span class="line">app.listen(8080);</span><br></pre></td></tr></table></figure>
+<p>对ctx.body赋值就是将数据返回给客户端，可以通过ctx.redirect()来实现302跳转，设置ctx.status可以对http的status code进行设置，如果没有对ctx.body进行赋值，则ctx.status默认为404，如果已经对ctx.body赋值，则ctx.status值为200。</p>
+<h4 id="koa中的错误处理"><a href="#koa中的错误处理" class="headerlink" title="koa中的错误处理"></a>koa中的错误处理</h4><p>得益于koa的框架，捕获服务器的错误变得非常方便，只需要加入一个<code>try catch</code>的代码块将<code>next()</code>函数包裹起来就可以了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">const koa = require(&apos;koa&apos;);</span><br><span class="line">const app = new koa();</span><br><span class="line">app.use(async (ctx, next) =&gt; &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        await next();</span><br><span class="line">    &#125; catch (err) &#123;</span><br><span class="line">        console.log(&apos;error handler&apos;, err);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.use(async (ctx, next) =&gt; &#123;</span><br><span class="line">    console.log(&apos;koa---1&apos;);</span><br><span class="line">    await next();</span><br><span class="line">    console.log(&apos;koa---2&apos;);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.use(async (ctx, next) =&gt; &#123;</span><br><span class="line">    console.log(&apos;koa---3&apos;);</span><br><span class="line">    // throw new Error(&apos;error3&apos;);</span><br><span class="line">    await next();</span><br><span class="line">    console.log(&apos;koa---4&apos;);</span><br><span class="line">    // throw new Error(&apos;error4&apos;);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.use(async (ctx, next) =&gt; &#123;</span><br><span class="line">    console.log(&apos;koa---5&apos;);</span><br><span class="line">    await next();</span><br><span class="line">    console.log(&apos;koa---6&apos;);</span><br><span class="line">&#125;)</span><br><span class="line">app.use(async (ctx,next) =&gt;&#123;</span><br><span class="line">   ctx.body = &apos;ok&apos; ;</span><br><span class="line">&#125;);</span><br><span class="line">app.listen(8080);</span><br></pre></td></tr></table></figure>
+<p>在error3和error4的位置抛出异常都能够被错误处理中间件捕获，和connect类似，当错误抛出的时候，koa不在执行其他的中间件，直接跳到错误处理中间件处理错误。</p>
+<p>通过<code>try catch</code>捕获的错误不会触发app的error事件，如果需要在<code>app.on(&#39;error&#39;)</code>中继续处理该错误，可以通过<code>ctx.app.emit(&#39;error&#39;,err)</code>来释放该error事件。</p>
+<h3 id="服务器的一般目录结构"><a href="#服务器的一般目录结构" class="headerlink" title="服务器的一般目录结构"></a>服务器的一般目录结构</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">├── logs</span><br><span class="line">├── package.json</span><br><span class="line">├── public</span><br><span class="line">│   ├── index.html</span><br><span class="line">│   └── news.html</span><br><span class="line">├── server</span><br><span class="line">│   ├── app.js</span><br><span class="line">│   ├── config</span><br><span class="line">│   ├── controller</span><br><span class="line">│   ├── routes</span><br><span class="line">│   └── service</span><br><span class="line">└── views</span><br><span class="line">    ├── index.ejs</span><br><span class="line">    └── welcome.ejs</span><br></pre></td></tr></table></figure>
+<p>logs为输入日志的目录，public为静态文件目录，线上环境下一般放在cdn上，然后通过nginx进行转发，view为模板目录，config为服务器配置目录，一般服务器都会分好几个环境，比如dev，test，online环境。service为各种服务的抽象，一般用来做业务逻辑的封装，减轻controller层的任务，保证业务逻辑的独立性，提供给不同controller调用。controller层负责解析用户的数据，并请求相应的service获取数据，拼接成用户所需要的数据返回给用户。routes里面对路由进行设置，不同的请求路径调用不同的controller。</p>
+<h3 id="课后作业"><a href="#课后作业" class="headerlink" title="课后作业"></a>课后作业</h3><h4 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h4><p>实现一个版本管理后台</p>
+<h4 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h4><ul>
+<li>提供版本录入功能<ul>
+<li>包含当前版本号，系统(Android/IOS/RN)，环境(dev/online)，是否强制更新，灰度级别(1%,10%,30%,50%,100%)</li>
+</ul>
+</li>
+<li>修改灰度级别</li>
+<li>上线，下架功能</li>
+<li>获取最新版本信息(传入系统环境参数)</li>
+<li>额外<ul>
+<li>白名单(保证每次都会灰度)</li>
+<li>白名单的管理(增删改查)</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/nodejs/">nodejs</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/05/15/nodejs-server-base/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Nodejs之web服务基础</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/11/14/webpack-v3/">
+        <span class="next-text nav-default">Webpack3.0</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2018
+    <span class="footer-author">FEGO.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
