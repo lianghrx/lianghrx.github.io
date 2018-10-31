@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta name="generator" content="Hexo 3.8.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="redux源码阅读">
+
+
+
+
+  <meta name="keywords" content="redux,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="前端技术文档">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2017/09/19/redux-code-view/">
+
+
+<meta name="description" content="前言Redux是React的一个状态管理工具，或许大家已经比较熟悉了它的使用方式，比如创建store，发起action，使用reducer更新state等等，那么它的内部是如何实现的呢？为了更好的熟悉和使用Redux，我们选择了3.7.2版本进行源码阅读，并在这里跟大家分享一下心得。 目录结构redux的代码比较精炼, 按功能分为四部分  createStore.js 创建store实例 comb">
+<meta name="keywords" content="redux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redux源码阅读">
+<meta property="og:url" content="http://yoursite.com/2017/09/19/redux-code-view/index.html">
+<meta property="og:site_name" content="前端技术文档">
+<meta property="og:description" content="前言Redux是React的一个状态管理工具，或许大家已经比较熟悉了它的使用方式，比如创建store，发起action，使用reducer更新state等等，那么它的内部是如何实现的呢？为了更好的熟悉和使用Redux，我们选择了3.7.2版本进行源码阅读，并在这里跟大家分享一下心得。 目录结构redux的代码比较精炼, 按功能分为四部分  createStore.js 创建store实例 comb">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-10-31T02:23:16.249Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redux源码阅读">
+<meta name="twitter:description" content="前言Redux是React的一个状态管理工具，或许大家已经比较熟悉了它的使用方式，比如创建store，发起action，使用reducer更新state等等，那么它的内部是如何实现的呢？为了更好的熟悉和使用Redux，我们选择了3.7.2版本进行源码阅读，并在这里跟大家分享一下心得。 目录结构redux的代码比较精炼, 按功能分为四部分  createStore.js 创建store实例 comb">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> redux源码阅读 - 前端技术文档 </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">前端技术文档</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          redux源码阅读
+        
+      </h1>
+
+      <time class="post-time">
+          Sep 19 2017
+          Henry
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Redux是React的一个状态管理工具，或许大家已经比较熟悉了它的使用方式，比如创建store，发起action，使用reducer更新state等等，那么它的内部是如何实现的呢？为了更好的熟悉和使用Redux，我们选择了<code>3.7.2</code>版本进行源码阅读，并在这里跟大家分享一下心得。</p>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>redux的代码比较精炼, 按功能分为四部分</p>
+<ul>
+<li>createStore.js 创建store实例</li>
+<li>combineReducers.js 组合多个reducer函数，生成新的reducer</li>
+<li>compose.js &amp; applyMiddleware.js 添加中间件</li>
+<li>bindActionCreators.js 给actions绑定dispatch方法</li>
+</ul>
+<p>其中前三个是核心功能，下面我们依次解读源码。</p>
+<h2 id="createStore-js"><a href="#createStore-js" class="headerlink" title="createStore.js"></a>createStore.js</h2><h3 id="createStore"><a href="#createStore" class="headerlink" title="createStore"></a>createStore</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">export default function createStore(reducer, preloadedState, enhancer) &#123;</div><div class="line">  if (typeof preloadedState === &apos;function&apos; &amp;&amp; typeof enhancer === &apos;undefined&apos;) &#123;</div><div class="line">    enhancer = preloadedState</div><div class="line">    preloadedState = undefined</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  if (typeof enhancer !== &apos;undefined&apos;) &#123;</div><div class="line">    if (typeof enhancer !== &apos;function&apos;) &#123;</div><div class="line">      throw new Error(&apos;Expected the enhancer to be a function.&apos;)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return enhancer(createStore)(reducer, preloadedState)</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>它接收三个参数:</p>
+<ul>
+<li>reducer <strong><code>[Function]</code></strong> 顶层reducer, 接收store的全局state和待处理的action, 返回新的全局state</li>
+<li>preloadedState <strong><code>[Object]</code></strong> 初始化的state对象</li>
+<li>enhancer <strong><code>[Function]</code></strong> 添加中间件, 由applyMiddleware生成</li>
+</ul>
+<p>在createStore函数内, redux定义了一系列的变量和方法, 用于缓存数据和触发事件  </p>
+<h3 id="getState-amp-subscribe"><a href="#getState-amp-subscribe" class="headerlink" title="getState &amp; subscribe"></a>getState &amp; subscribe</h3><ul>
+<li>getState(): 获取全局state</li>
+<li>subscribe(): 注册监听函数</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">let currentReducer = reducer</div><div class="line">let currentState = preloadedState</div><div class="line">let currentListeners = []</div><div class="line">let nextListeners = currentListeners</div><div class="line">let isDispatching = false</div><div class="line">	</div><div class="line">function ensureCanMutateNextListeners() &#123;</div><div class="line">  if (nextListeners === currentListeners) &#123;</div><div class="line">    nextListeners = currentListeners.slice()</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">	</div><div class="line">/**</div><div class="line"> * Reads the state tree managed by the store.</div><div class="line"> *</div><div class="line"> * @returns &#123;any&#125; The current state tree of your application.</div><div class="line"> */</div><div class="line">function getState() &#123;</div><div class="line">  return currentState</div><div class="line">&#125;</div><div class="line">	</div><div class="line">/**</div><div class="line"> * Adds a change listener. It will be called any time an action is dispatched,</div><div class="line"> * and some part of the state tree may potentially have changed. You may then</div><div class="line"> * call `getState()` to read the current state tree inside the callback.</div><div class="line"> *</div><div class="line"> ......</div><div class="line"></div><div class="line"> *</div><div class="line"> * @param &#123;Function&#125; listener A callback to be invoked on every dispatch.</div><div class="line"> * @returns &#123;Function&#125; A function to remove this change listener.</div><div class="line"> */</div><div class="line">function subscribe(listener) &#123;</div><div class="line">  if (typeof listener !== &apos;function&apos;) &#123;</div><div class="line">    throw new Error(&apos;Expected listener to be a function.&apos;)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  let isSubscribed = true</div><div class="line"></div><div class="line">  ensureCanMutateNextListeners()</div><div class="line">  nextListeners.push(listener)</div><div class="line"></div><div class="line">  return function unsubscribe() &#123;</div><div class="line">    if (!isSubscribed) &#123;</div><div class="line">      return</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    isSubscribed = false</div><div class="line"></div><div class="line">    ensureCanMutateNextListeners()</div><div class="line">    const index = nextListeners.indexOf(listener)</div><div class="line">    nextListeners.splice(index, 1)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里缓存了三个数据: </p>
+<ul>
+<li>currentState: 全局state</li>
+<li>currentListeners: 已生效的监听函数队列</li>
+<li>nextListeners: 即将生效的监听函数队列</li>
+</ul>
+<p>每当改变监听函数队列时, 都会调用 ensureCanMutateNextListeners, 以确保对于 nextListeners 的改变不会影响 currentListeners<br>调用 store.dispatch 时, 会把 nextListeners 赋值给 currentListeners</p>
+<h3 id="dispatch"><a href="#dispatch" class="headerlink" title="dispatch"></a>dispatch</h3><p>这是最原始的dispatch函数 ( 为什么说是最原始的, 看到中间件的时候就会明白了 )  </p>
+<p>其功能如下: </p>
+<ul>
+<li>检查 action 类型</li>
+<li>调用顶层 reducer, 获取新的全局state</li>
+<li>调用监听函数队列</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Dispatches an action. It is the only way to trigger a state change.</div><div class="line"> ......</div><div class="line"></div><div class="line"> * @param &#123;Object&#125; action A plain object representing “what changed”. It is</div><div class="line"> * a good idea to keep actions serializable so you can record and replay user</div><div class="line"> * sessions, or use the time travelling `redux-devtools`. An action must have</div><div class="line"> * a `type` property which may not be `undefined`. It is a good idea to use</div><div class="line"> * string constants for action types.</div><div class="line"> ......</div><div class="line"></div><div class="line"> * @returns &#123;Object&#125; For convenience, the same action object you dispatched.</div><div class="line"> */</div><div class="line">function dispatch(action) &#123;</div><div class="line">  if (!isPlainObject(action)) &#123;</div><div class="line">    throw new Error(</div><div class="line">      &apos;Actions must be plain objects. &apos; +</div><div class="line">      &apos;Use custom middleware for async actions.&apos;</div><div class="line">    )</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  if (typeof action.type === &apos;undefined&apos;) &#123;</div><div class="line">    throw new Error(</div><div class="line">      &apos;Actions may not have an undefined &quot;type&quot; property. &apos; +</div><div class="line">      &apos;Have you misspelled a constant?&apos;</div><div class="line">    )</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  if (isDispatching) &#123;</div><div class="line">    throw new Error(&apos;Reducers may not dispatch actions.&apos;)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  try &#123;</div><div class="line">    isDispatching = true</div><div class="line">    currentState = currentReducer(currentState, action)</div><div class="line">  &#125; finally &#123;</div><div class="line">    isDispatching = false</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  const listeners = currentListeners = nextListeners</div><div class="line">  for (let i = 0; i &lt; listeners.length; i++) &#123;</div><div class="line">    const listener = listeners[i]</div><div class="line">    listener()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  return action</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>createStore执行完后, 发出初始化的action<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// When a store is created, an &quot;INIT&quot; action is dispatched so that every</div><div class="line">  // reducer returns their initial state. This effectively populates</div><div class="line">  // the initial state tree.</div><div class="line">  dispatch(&#123; type: ActionTypes.INIT &#125;)</div></pre></td></tr></table></figure></p>
+<h2 id="combineReducers-js"><a href="#combineReducers-js" class="headerlink" title="combineReducers.js"></a>combineReducers.js</h2><p>在执行核心代码前，做了许多校验和错误处理</p>
+<h3 id="combineReducers"><a href="#combineReducers" class="headerlink" title="combineReducers"></a>combineReducers</h3><p>接受一个对象，返回一个函数，主要逻辑如下：</p>
+<ul>
+<li>处理传入的对象, 将所有值为函数的属性，缓存为reducers对象</li>
+<li>返回一个combine函数，作为新的reducer，接收 state &amp; action</li>
+<li>当执行combine时，调用内部缓存的reducers对象，以属性名为键值，将所有reducer的执行结果保存为一个对象</li>
+<li>判断 state 是否改变，决定返回新的 nextState 或者传入的 state</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Turns an object whose values are different reducer functions, into a single</div><div class="line"> * reducer function. It will call every child reducer, and gather their results</div><div class="line"> * into a single state object, whose keys correspond to the keys of the passed</div><div class="line"> * reducer functions.</div><div class="line"> */</div><div class="line">export default function combineReducers(reducers) &#123;</div><div class="line">  const reducerKeys = Object.keys(reducers)</div><div class="line">  const finalReducers = &#123;&#125;</div><div class="line">	// 获取所有值为函数的属性，组成新 reducers 对象</div><div class="line">  for (let i = 0; i &lt; reducerKeys.length; i++) &#123;</div><div class="line">    const key = reducerKeys[i]</div><div class="line"></div><div class="line">    if (typeof reducers[key] === &apos;function&apos;) &#123;</div><div class="line">      finalReducers[key] = reducers[key]</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  const finalReducerKeys = Object.keys(finalReducers)</div><div class="line"></div><div class="line">  let unexpectedKeyCache</div><div class="line">  if (process.env.NODE_ENV !== &apos;production&apos;) &#123;</div><div class="line">    unexpectedKeyCache = &#123;&#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // 返回新的 reducer 函数</div><div class="line">  return function combination(state = &#123;&#125;, action) &#123;</div><div class="line">    let hasChanged = false</div><div class="line">    const nextState = &#123;&#125;</div><div class="line">		// 遍历 reducers 对象, 将每个函数的结果保存到 nextState 中</div><div class="line">    for (let i = 0; i &lt; finalReducerKeys.length; i++) &#123;</div><div class="line">      const key = finalReducerKeys[i]</div><div class="line">      const reducer = finalReducers[key]</div><div class="line">      const previousStateForKey = state[key]</div><div class="line">      const nextStateForKey = reducer(previousStateForKey, action)</div><div class="line">      if (typeof nextStateForKey === &apos;undefined&apos;) &#123;</div><div class="line">        const errorMessage = getUndefinedStateErrorMessage(key, action)</div><div class="line">        throw new Error(errorMessage)</div><div class="line">      &#125;</div><div class="line">      nextState[key] = nextStateForKey</div><div class="line">      hasChanged = hasChanged || nextStateForKey !== previousStateForKey</div><div class="line">    &#125;</div><div class="line">		// 如果 nextState 改变, 返回新的 state</div><div class="line">    return hasChanged ? nextState : state</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="bindActionCreators-js"><a href="#bindActionCreators-js" class="headerlink" title="bindActionCreators.js"></a>bindActionCreators.js</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">function bindActionCreator(actionCreator, dispatch) &#123;</div><div class="line">  return (...args) =&gt; dispatch(actionCreator(...args))</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Turns an object whose values are action creators, into an object with the</div><div class="line"> * same keys, but with every function wrapped into a `dispatch` call so they</div><div class="line"> * may be invoked directly. This is just a convenience method, as you can call</div><div class="line"> * `store.dispatch(MyActionCreators.doSomething())` yourself just fine.</div><div class="line"> */</div><div class="line">export default function bindActionCreators(actionCreators, dispatch) &#123;</div><div class="line">  if (typeof actionCreators === &apos;function&apos;) &#123;</div><div class="line">    return bindActionCreator(actionCreators, dispatch)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  const keys = Object.keys(actionCreators)</div><div class="line">  const boundActionCreators = &#123;&#125;</div><div class="line">  for (let i = 0; i &lt; keys.length; i++) &#123;</div><div class="line">    const key = keys[i]</div><div class="line">    const actionCreator = actionCreators[key]</div><div class="line">    if (typeof actionCreator === &apos;function&apos;) &#123;</div><div class="line">      boundActionCreators[key] = bindActionCreator(actionCreator, dispatch)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  return boundActionCreators</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个就比较简单了，actionCreator(s) =&gt; 绑定dispatch的actionCreator(s)</p>
+<ul>
+<li>判断 actionCreators 类型，若为函数，直接返回绑定后的 function</li>
+<li>若 actionCreators 为对象，依次给属性对应的函数绑定dispatch，并返回新生成的map对象</li>
+</ul>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/redux/">redux</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2017/08/11/object-inherit/">
+        <span class="next-text nav-default">JS对象继承</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2018
+    <span class="footer-author">FEGO.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
