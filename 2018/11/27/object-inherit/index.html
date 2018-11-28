@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta name="generator" content="Hexo 3.8.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Javascript中的继承">
+
+
+
+
+  <meta name="keywords" content="javascript,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="前端技术文档">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2018/11/27/object-inherit/">
+
+
+<meta name="description" content="JS的类在研究继承之前, 我们先看一下Javascript中的类是如何实现的 ES612345678class A &amp;#123;  constructor() &amp;#123;    this.name = &apos;class A&apos;;  &amp;#125;  toString() &amp;#123;    console.log(this.name)  &amp;#125;&amp;#125; ES201512345678910111">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript中的继承">
+<meta property="og:url" content="http://yoursite.com/2018/11/27/object-inherit/index.html">
+<meta property="og:site_name" content="前端技术文档">
+<meta property="og:description" content="JS的类在研究继承之前, 我们先看一下Javascript中的类是如何实现的 ES612345678class A &amp;#123;  constructor() &amp;#123;    this.name = &apos;class A&apos;;  &amp;#125;  toString() &amp;#123;    console.log(this.name)  &amp;#125;&amp;#125; ES201512345678910111">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-11-28T12:36:42.433Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript中的继承">
+<meta name="twitter:description" content="JS的类在研究继承之前, 我们先看一下Javascript中的类是如何实现的 ES612345678class A &amp;#123;  constructor() &amp;#123;    this.name = &apos;class A&apos;;  &amp;#125;  toString() &amp;#123;    console.log(this.name)  &amp;#125;&amp;#125; ES201512345678910111">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Javascript中的继承 - 前端技术文档 </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">前端技术文档</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Javascript中的继承
+        
+      </h1>
+
+      <time class="post-time">
+          Nov 27 2018
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="JS的类"><a href="#JS的类" class="headerlink" title="JS的类"></a><strong>JS的类</strong></h2><p>在研究继承之前, 我们先看一下Javascript中的类是如何实现的</p>
+<p><strong>ES6</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">'class A'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>ES2015</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ..._createClass... */</span></span><br><span class="line"><span class="comment">/* ..._classCallCheck... */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> A = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    _classCallCheck(<span class="keyword">this</span>, A);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">"class A"</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  _createClass(A, [</span><br><span class="line">    &#123;</span><br><span class="line">      key: <span class="string">"toString"</span>,</span><br><span class="line">      value: <span class="function"><span class="keyword">function</span> <span class="title">toString</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> A;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
+<p>使用<code>new</code>操作符生成类的实例对象<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = <span class="keyword">new</span> A();</span><br><span class="line"></span><br><span class="line">a.toString()    <span class="comment">// class A</span></span><br><span class="line">a.__proto__ === A.prototype   <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>类是一种特殊的函数, 通过new关键字调用函数产生新实例对象, 通过this访问对象的属性和方法, 最后返回该对象</strong></p>
+<h2 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a><strong>原型链</strong></h2><p>Javascript中的继承是通过原型链实现的。</p>
+<p><strong>ES6</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>ES2015</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> A = <span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  _classCallCheck(<span class="keyword">this</span>, A);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> B = (<span class="function"><span class="keyword">function</span>(<span class="params">_A</span>) </span>&#123;</span><br><span class="line">  _inherits(B, _A);   <span class="comment">// 继承的实现</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    _classCallCheck(<span class="keyword">this</span>, B);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> _possibleConstructorReturn(</span><br><span class="line">      <span class="keyword">this</span>,</span><br><span class="line">      (B.__proto__ || <span class="built_in">Object</span>.getPrototypeOf(B)).apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> B;</span><br><span class="line">&#125;)(A);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* _possibleConstructorReturn */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_classCallCheck</span>(<span class="params">instance, Constructor</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!(instance <span class="keyword">instanceof</span> Constructor)) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">"Cannot call a class as a function"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_inherits</span>(<span class="params">subClass, superClass</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> superClass !== <span class="string">"function"</span> &amp;&amp; superClass !== <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(</span><br><span class="line">      <span class="string">"Super expression must either be null or a function, not "</span> +</span><br><span class="line">        <span class="keyword">typeof</span> superClass</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 原型的继承 (私有方法和属性)</span></span><br><span class="line">  subClass.prototype = <span class="built_in">Object</span>.create(superClass &amp;&amp; superClass.prototype, &#123;</span><br><span class="line">    <span class="keyword">constructor</span>: &#123;    <span class="comment">// constructor指向subClass构造函数</span></span><br><span class="line">      value: subClass,</span><br><span class="line">      enumerable: <span class="literal">false</span>,</span><br><span class="line">      writable: <span class="literal">true</span>,</span><br><span class="line">      configurable: <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="comment">// 类的继承 (静态方法和属性)</span></span><br><span class="line">  <span class="keyword">if</span> (superClass)</span><br><span class="line">    <span class="built_in">Object</span>.setPrototypeOf</span><br><span class="line">      ? <span class="built_in">Object</span>.setPrototypeOf(subClass, superClass)</span><br><span class="line">      : (subClass.__proto__ = superClass);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在<code>_inherits</code>函数的代码中可以看到, 类的继承是通过两条原型链实现的</p>
+<ol>
+<li><p>私有方法的原型链</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const a = new A();</span><br><span class="line">const b = new B();</span><br><span class="line"></span><br><span class="line">b.__proto__ === B.prototype   // true</span><br><span class="line"></span><br><span class="line">B.prototype instanceof A    // true</span><br><span class="line">B.prototype.__proto__ === A.prototype   // true</span><br><span class="line">b.__proto__.__proto__ === A.prototype   // true</span><br><span class="line"></span><br><span class="line">b instanceof B    // true</span><br><span class="line">b instanceof A    // ???</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>静态方法的原型链</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">A.print = () =&gt; &#123; console.log(&apos;print, static in A&apos;) &#125;</span><br><span class="line">A.test = () =&gt; &#123; console.log(&apos;test, static in A&apos;) &#125;</span><br><span class="line">B.test = () =&gt; &#123; console.log(&apos;test, static in B&apos;) &#125;</span><br><span class="line"></span><br><span class="line">B.test()    // test, static in B</span><br><span class="line">B.print()   // ???</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>类继承的实现方式已经比较清楚了</strong></p>
+<ul>
+<li>通过类的<code>prototype</code>属性, 构造出类实例的原型链, 实现私有属性的继承</li>
+<li>通过类的<code>__proto__</code>属性, 构造出类的原型链, 实现静态属性的继承</li>
+</ul>
+<h2 id="instanceof的原理"><a href="#instanceof的原理" class="headerlink" title="instanceof的原理"></a>instanceof的原理</h2><p>引用MDN文档中关于<code>instanceof</code>操作符的解释</p>
+<p><code>instanceof运算符用于测试构造函数的prototype属性是否出现在对象的原型链中的任何位置</code></p>
+<p><code>A.prototype</code>存在于b的<code>__proto__</code>原型链上, 所以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">b instanceof A    // true</span><br><span class="line"></span><br><span class="line">// B.prototype赋值为A的新实例</span><br><span class="line">B.prototype = Object.create(A.prototype, &#123;</span><br><span class="line">  constructor: &#123;</span><br><span class="line">    value: B,</span><br><span class="line">    enumerable: false,</span><br><span class="line">    writable: true,</span><br><span class="line">    configurable: true</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">b instanceof B    // ???</span><br><span class="line">b instanceof A    // ???</span><br></pre></td></tr></table></figure>
+<h2 id="Object-amp-Function"><a href="#Object-amp-Function" class="headerlink" title="Object &amp; Function"></a>Object &amp; Function</h2><p><strong>Javascript中一切都是对象, 包括函数</strong>, 更准确的说法是:</p>
+<ol>
+<li>除了原始类型外, 都是对象（Array, Object, Function等）</li>
+<li>除了<code>null</code>和<code>undefined</code>, 原始类型在使用时可以被包装成对象（String, Number, Boolean等）</li>
+</ol>
+<p>这里的主题是<strong>函数</strong>与<strong>对象</strong>的关系</p>
+<p><strong>Object是对象的构造函数, Function是函数的构造函数</strong></p>
+<ul>
+<li>Object的构造函数是Function吗?</li>
+<li>Object也是一个对象, 那它的构造函数会不会是自己？</li>
+<li>Function是函数也是对象, 那么它的构造函数又是谁呢？是自己吗？还是Object？</li>
+</ul>
+<p>我们从原型和继承的角度, 分析一下Object和Function之间的关系。</p>
+<p><strong>Object与Function的关系</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span> <span class="keyword">instanceof</span> <span class="built_in">Function</span>    <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Function</span> <span class="keyword">instanceof</span> <span class="built_in">Object</span>    <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span> <span class="keyword">instanceof</span> <span class="built_in">Object</span>    <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Function</span> <span class="keyword">instanceof</span> <span class="built_in">Function</span>    <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 原型 */</span></span><br><span class="line">ORIGIN_OBJECT = <span class="built_in">Object</span>.prototype    <span class="comment">// &#123;constructor: ƒ, __defineGetter__: ƒ, __defineSetter__: ƒ, hasOwnProperty: ƒ, …&#125;</span></span><br><span class="line">ORIGIN_FUNCTION = <span class="built_in">Function</span>.prototype    <span class="comment">// ƒ () &#123; [native code] &#125;</span></span><br><span class="line"></span><br><span class="line">ORIGIN_OBJECT.__proto__   <span class="comment">// null</span></span><br><span class="line">ORIGIN_FUNCTION.__proto__   <span class="comment">// ORIGIN_OBJECT</span></span><br><span class="line"></span><br><span class="line">ORIGIN_FUNCTION instaceof <span class="built_in">Function</span>    <span class="comment">// false</span></span><br><span class="line">ORIGIN_FUNCTION instaceof <span class="built_in">Object</span>    <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">ORIGIN_FUNCTION()   <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> ORIGIN_FUNCTION()   <span class="comment">// Uncaught TypeError: Function.prototype is not a constructor</span></span><br><span class="line">ORIGIN_FUNCTION.prototype   <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 原型链 */</span></span><br><span class="line"><span class="built_in">Object</span>.__proto__ === <span class="built_in">Function</span>.prototype   <span class="comment">// ORIGIN_FUNCTION</span></span><br><span class="line"><span class="built_in">Function</span>.__proto__ === <span class="built_in">Function</span>.prototype   <span class="comment">// ORIGIN_FUNCTION</span></span><br><span class="line"><span class="built_in">Function</span>.prototype.__proto__ === <span class="built_in">Object</span>.prototype   <span class="comment">// ORIGIN_OBJECT</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.__proto__ === <span class="literal">null</span>   <span class="comment">// null</span></span><br></pre></td></tr></table></figure></p>
+<p>我们得到了两个最原始的<strong>对象</strong>类型:</p>
+<ul>
+<li><code>{constructor: ƒ, __defineGetter__: ƒ, …}</code>, 原始函数, 与关键字new的构造函数实例化有关</li>
+<li><code>ƒ () { [native code] }</code>, 原始对象, 所有对象原型链的终点</li>
+</ul>
+<p><strong>构造函数实例化</strong></p>
+<p>这里有两个比较重要的属性</p>
+<ul>
+<li><code>prototype</code>, 用于构造函数实例化时生成原型链, 形成继承关系</li>
+<li><code>__proto__</code>, Function.prototype, 作为构造函数的类继承, 或是作为对象的原型继承</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Object实例化 */</span></span><br><span class="line"><span class="keyword">const</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">o.__proto__ === <span class="built_in">Object</span>.prototype</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Function实例化 */</span></span><br><span class="line"><span class="keyword">const</span> fn = <span class="keyword">new</span> <span class="built_in">Function</span>()</span><br><span class="line">fn.__proto__ === <span class="built_in">Function</span>.prototype</span><br><span class="line">fn.prototype.__proto__ === <span class="built_in">Object</span>.prototype   <span class="comment">// fn.prototype = Object.create(Object.prototype, &#123; constructor: fn &#125;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* fn实例化 */</span></span><br><span class="line"><span class="keyword">const</span> t = <span class="keyword">new</span> fn()</span><br><span class="line">t.__proto__ === fn.prototype</span><br><span class="line">t.__proto__.__proto__ === <span class="built_in">Object</span>.prototype</span><br></pre></td></tr></table></figure>
+<p>Object的实例化较为简单:</p>
+<ul>
+<li>生成新实例对象, 其<code>__proto__</code>指向<code>Object.prototype</code></li>
+<li>实例对象为Object类型</li>
+</ul>
+<p>Function的实例化稍有不同:</p>
+<ul>
+<li>生成新实例对象, 其<code>__proto__</code>指向<code>Function.prototype</code></li>
+<li>实例对象（fn）为Function类型, 可执行实例化生成新对象（Object类型）</li>
+<li>将fn的<code>prototype</code>属性赋值为Object类型的对象, 并将<code>prototype.constructor</code>指向fn自身</li>
+</ul>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/javascript/">javascript</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/08/23/css-layout/">
+        <span class="next-text nav-default">那些年忽略的CSS</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2018
+    <span class="footer-author">FEGO.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
