@@ -43,10 +43,12 @@
 <meta property="og:site_name" content="前端技术文档">
 <meta property="og:description" content="JS的类在研究继承之前, 我们先看一下Javascript中的类是如何实现的 ES612345678class A &amp;#123;  constructor() &amp;#123;    this.name = &apos;class A&apos;;  &amp;#125;  toString() &amp;#123;    console.log(this.name)  &amp;#125;&amp;#125; ES201512345678910111">
 <meta property="og:locale" content="zh">
-<meta property="og:updated_time" content="2018-11-28T12:36:42.433Z">
+<meta property="og:image" content="http://yoursite.com/images/object-function.png">
+<meta property="og:updated_time" content="2018-11-29T06:58:13.687Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript中的继承">
 <meta name="twitter:description" content="JS的类在研究继承之前, 我们先看一下Javascript中的类是如何实现的 ES612345678class A &amp;#123;  constructor() &amp;#123;    this.name = &apos;class A&apos;;  &amp;#125;  toString() &amp;#123;    console.log(this.name)  &amp;#125;&amp;#125; ES201512345678910111">
+<meta name="twitter:image" content="http://yoursite.com/images/object-function.png">
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
@@ -164,9 +166,9 @@
 <p>这里的主题是<strong>函数</strong>与<strong>对象</strong>的关系</p>
 <p><strong>Object是对象的构造函数, Function是函数的构造函数</strong></p>
 <ul>
-<li>Object的构造函数是Function吗?</li>
-<li>Object也是一个对象, 那它的构造函数会不会是自己？</li>
-<li>Function是函数也是对象, 那么它的构造函数又是谁呢？是自己吗？还是Object？</li>
+<li>Object是一个函数, 那它是Function的一个实例吗?</li>
+<li>Object也是一个对象, 那它会不会是自己的一个实例？</li>
+<li>Function是函数也是对象, 那么它又是谁的实例呢？是Function？还是Object？</li>
 </ul>
 <p>我们从原型和继承的角度, 分析一下Object和Function之间的关系。</p>
 <p><strong>Object与Function的关系</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span> <span class="keyword">instanceof</span> <span class="built_in">Function</span>    <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Function</span> <span class="keyword">instanceof</span> <span class="built_in">Object</span>    <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span> <span class="keyword">instanceof</span> <span class="built_in">Object</span>    <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Function</span> <span class="keyword">instanceof</span> <span class="built_in">Function</span>    <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 原型 */</span></span><br><span class="line">ORIGIN_OBJECT = <span class="built_in">Object</span>.prototype    <span class="comment">// &#123;constructor: ƒ, __defineGetter__: ƒ, __defineSetter__: ƒ, hasOwnProperty: ƒ, …&#125;</span></span><br><span class="line">ORIGIN_FUNCTION = <span class="built_in">Function</span>.prototype    <span class="comment">// ƒ () &#123; [native code] &#125;</span></span><br><span class="line"></span><br><span class="line">ORIGIN_OBJECT.__proto__   <span class="comment">// null</span></span><br><span class="line">ORIGIN_FUNCTION.__proto__   <span class="comment">// ORIGIN_OBJECT</span></span><br><span class="line"></span><br><span class="line">ORIGIN_FUNCTION instaceof <span class="built_in">Function</span>    <span class="comment">// false</span></span><br><span class="line">ORIGIN_FUNCTION instaceof <span class="built_in">Object</span>    <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">ORIGIN_FUNCTION()   <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> ORIGIN_FUNCTION()   <span class="comment">// Uncaught TypeError: Function.prototype is not a constructor</span></span><br><span class="line">ORIGIN_FUNCTION.prototype   <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 原型链 */</span></span><br><span class="line"><span class="built_in">Object</span>.__proto__ === <span class="built_in">Function</span>.prototype   <span class="comment">// ORIGIN_FUNCTION</span></span><br><span class="line"><span class="built_in">Function</span>.__proto__ === <span class="built_in">Function</span>.prototype   <span class="comment">// ORIGIN_FUNCTION</span></span><br><span class="line"><span class="built_in">Function</span>.prototype.__proto__ === <span class="built_in">Object</span>.prototype   <span class="comment">// ORIGIN_OBJECT</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.__proto__ === <span class="literal">null</span>   <span class="comment">// null</span></span><br></pre></td></tr></table></figure></p>
@@ -193,6 +195,7 @@
 <li>实例对象（fn）为Function类型, 可执行实例化生成新对象（Object类型）</li>
 <li>将fn的<code>prototype</code>属性赋值为Object类型的对象, 并将<code>prototype.constructor</code>指向fn自身</li>
 </ul>
+<p><strong>原型关系</strong><br>通过一张图来说明Object、Function及其实例的关系<br><img src="/images/object-function.png" alt="image"></p>
 
             </div>
           
