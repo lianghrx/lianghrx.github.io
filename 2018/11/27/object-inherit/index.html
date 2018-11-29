@@ -12,7 +12,7 @@
 
 
 
-  <meta name="description" content="Javascript中的继承">
+  <meta name="description" content="Javascript中的对象、函数以及类的继承">
 
 
 
@@ -38,17 +38,18 @@
 <meta name="description" content="JS的类在研究继承之前, 我们先看一下Javascript中的类是如何实现的 ES612345678class A &amp;#123;  constructor() &amp;#123;    this.name = &apos;class A&apos;;  &amp;#125;  toString() &amp;#123;    console.log(this.name)  &amp;#125;&amp;#125; ES201512345678910111">
 <meta name="keywords" content="javascript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Javascript中的继承">
+<meta property="og:title" content="Javascript中的对象、函数以及类的继承">
 <meta property="og:url" content="http://yoursite.com/2018/11/27/object-inherit/index.html">
 <meta property="og:site_name" content="前端技术文档">
 <meta property="og:description" content="JS的类在研究继承之前, 我们先看一下Javascript中的类是如何实现的 ES612345678class A &amp;#123;  constructor() &amp;#123;    this.name = &apos;class A&apos;;  &amp;#125;  toString() &amp;#123;    console.log(this.name)  &amp;#125;&amp;#125; ES201512345678910111">
 <meta property="og:locale" content="zh">
+<meta property="og:image" content="http://yoursite.com/images/object-inherit.png">
 <meta property="og:image" content="http://yoursite.com/images/object-function.png">
-<meta property="og:updated_time" content="2018-11-29T06:58:13.687Z">
+<meta property="og:updated_time" content="2018-11-29T08:34:03.511Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Javascript中的继承">
+<meta name="twitter:title" content="Javascript中的对象、函数以及类的继承">
 <meta name="twitter:description" content="JS的类在研究继承之前, 我们先看一下Javascript中的类是如何实现的 ES612345678class A &amp;#123;  constructor() &amp;#123;    this.name = &apos;class A&apos;;  &amp;#125;  toString() &amp;#123;    console.log(this.name)  &amp;#125;&amp;#125; ES201512345678910111">
-<meta name="twitter:image" content="http://yoursite.com/images/object-function.png">
+<meta name="twitter:image" content="http://yoursite.com/images/object-inherit.png">
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
@@ -73,7 +74,7 @@
 
 
 
-    <title> Javascript中的继承 - 前端技术文档 </title>
+    <title> Javascript中的对象、函数以及类的继承 - 前端技术文档 </title>
   </head>
 
   <body>
@@ -119,7 +120,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          Javascript中的继承
+          Javascript中的对象、函数以及类的继承
         
       </h1>
 
@@ -154,6 +155,7 @@
 <li>通过类的<code>prototype</code>属性, 构造出类实例的原型链, 实现私有属性的继承</li>
 <li>通过类的<code>__proto__</code>属性, 构造出类的原型链, 实现静态属性的继承</li>
 </ul>
+<p><strong>继承关系（B extends A）</strong><br><img src="/images/object-inherit.png" alt="image"></p>
 <h2 id="instanceof的原理"><a href="#instanceof的原理" class="headerlink" title="instanceof的原理"></a>instanceof的原理</h2><p>引用MDN文档中关于<code>instanceof</code>操作符的解释</p>
 <p><code>instanceof运算符用于测试构造函数的prototype属性是否出现在对象的原型链中的任何位置</code></p>
 <p><code>A.prototype</code>存在于b的<code>__proto__</code>原型链上, 所以</p>
