@@ -12,7 +12,7 @@
 
 
 
-  <meta name="description" content="Redux源码分析">
+  <meta name="description" content="Redux源码解析">
 
 
 
@@ -38,16 +38,16 @@
 <meta name="description" content="Redux是一个状态管理工具，或许大家已经比较熟悉了它的使用方式，比如创建store、派发action、利用reducer更新state等等。 工作流我们先通过一段代码, 看一下redux是如何使用的1234567891011121314151617181920212223242526272829303132/* store */import &amp;#123; createStore, applyMi">
 <meta name="keywords" content="redux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redux源码分析">
+<meta property="og:title" content="Redux源码解析">
 <meta property="og:url" content="http://yoursite.com/2018/12/05/redux-code-view/index.html">
 <meta property="og:site_name" content="前端技术文档">
 <meta property="og:description" content="Redux是一个状态管理工具，或许大家已经比较熟悉了它的使用方式，比如创建store、派发action、利用reducer更新state等等。 工作流我们先通过一段代码, 看一下redux是如何使用的1234567891011121314151617181920212223242526272829303132/* store */import &amp;#123; createStore, applyMi">
 <meta property="og:locale" content="zh">
 <meta property="og:image" content="http://yoursite.com/images/redux-react.png">
 <meta property="og:image" content="http://yoursite.com/images/redux-middleware.png">
-<meta property="og:updated_time" content="2018-12-11T05:58:27.259Z">
+<meta property="og:updated_time" content="2018-12-11T06:01:58.219Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redux源码分析">
+<meta name="twitter:title" content="Redux源码解析">
 <meta name="twitter:description" content="Redux是一个状态管理工具，或许大家已经比较熟悉了它的使用方式，比如创建store、派发action、利用reducer更新state等等。 工作流我们先通过一段代码, 看一下redux是如何使用的1234567891011121314151617181920212223242526272829303132/* store */import &amp;#123; createStore, applyMi">
 <meta name="twitter:image" content="http://yoursite.com/images/redux-react.png">
 
@@ -74,7 +74,7 @@
 
 
 
-    <title> Redux源码分析 - 前端技术文档 </title>
+    <title> Redux源码解析 - 前端技术文档 </title>
   </head>
 
   <body>
@@ -120,7 +120,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          Redux源码分析
+          Redux源码解析
         
       </h1>
 
@@ -188,6 +188,7 @@
 <li><code>applyMiddleware</code>返回的修饰函数, 将<code>store.dispatch</code>替换成包装后的<code>dispatch</code>, 并返回新的<code>store</code></li>
 <li>中间件的调用顺序为, 从左到右依次调用</li>
 </ul>
+<p><img src="/images/redux-middleware.png" alt="image"></p>
 <p><strong>Middleware</strong></p>
 <p>中间件的结构较为复杂, 它是由多层函数的<strong>柯里化</strong>构成, 我们以<code>redux-thunk</code>为例了解其实现机制</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* redux-thunk */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createThunkMiddleware</span>(<span class="params">extraArgument</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 返回中间件</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">&#123; dispatch, getState &#125;</span>) =&gt;</span> next =&gt; <span class="function"><span class="params">action</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> action === <span class="string">'function'</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> action(dispatch, getState, extraArgument);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> next(action);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> thunk = createThunkMiddleware();</span><br><span class="line">thunk.withExtraArgument = createThunkMiddleware;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> thunk;</span><br></pre></td></tr></table></figure>
@@ -196,7 +197,6 @@
 <li>传递层, 获得钩子函数<code>next</code>, 返回自身的调用钩子, 作为参数传递给下个中间件的传递函数</li>
 <li>逻辑层, 钩子函数（包装后的<code>dispatch</code>）, 获得<code>action</code>, 处理中间件业务逻辑, 调用上一个中间件的钩子<code>next(action)</code>, 形成链式调用直至<code>store.dispatch(action)</code></li>
 </ul>
-<p><img src="/images/redux-middleware.png" alt="image"></p>
 <h3 id="bindActionCreators-js"><a href="#bindActionCreators-js" class="headerlink" title="bindActionCreators.js"></a>bindActionCreators.js</h3><p>给<code>actionCreator</code>绑定<code>dispatch</code>函数</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bindActionCreator</span>(<span class="params">actionCreator, dispatch</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 返回绑定后的函数, 可以直接调用, 派发action</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">...args</span>) =&gt;</span> dispatch(actionCreator(...args))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">bindActionCreators</span>(<span class="params">actionCreators, dispatch</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> actionCreators === <span class="string">'function'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> bindActionCreator(actionCreators, dispatch)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(actionCreators)</span><br><span class="line">  <span class="keyword">const</span> boundActionCreators = &#123;&#125;</span><br><span class="line">  <span class="comment">// 逐个绑定actionCreator</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; keys.length; i++) &#123;</span><br><span class="line">    <span class="keyword">const</span> key = keys[i]</span><br><span class="line">    <span class="keyword">const</span> actionCreator = actionCreators[key]</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> actionCreator === <span class="string">'function'</span>) &#123;</span><br><span class="line">      boundActionCreators[key] = bindActionCreator(actionCreator, dispatch)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 返回绑定后的actionCreators对象, 结构与之前一样</span></span><br><span class="line">  <span class="keyword">return</span> boundActionCreators</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这个概念就比较简单了</p>
